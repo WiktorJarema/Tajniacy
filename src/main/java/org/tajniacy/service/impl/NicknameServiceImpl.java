@@ -45,4 +45,9 @@ public class NicknameServiceImpl implements NicknameService {
     public List<Nickname> getAllUsedNicknames() {
         return nicknameRepository.getAllUsedNicknames();
     }
+
+    @Override
+    public Nickname getNicknameById(Long id) throws NicknameNotFoundException {
+        return nicknameRepository.findNicknameById(id);
+    }
 }

@@ -1,17 +1,17 @@
 package org.tajniacy.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.tajniacy.model.Nickname;
 import org.tajniacy.service.NicknameService;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
-@Controller
 @RestController
-public class NicknameController {
+public class NicknameRestController {
 
     @Autowired
     private NicknameService nicknameService;
@@ -25,5 +25,19 @@ public class NicknameController {
     public List<Nickname> getAllUsedNicknames() {
         return nicknameService.getAllUsedNicknames();
     }
+
+    @GetMapping(path = "/currentnickname")
+    public Nickname getAllNicknames(HttpSession session) {
+
+        Object nicknameObject = session.getAttribute("nickname");
+        if (nicknameObject != null) {
+            return (Nickname) nicknameObject;
+        } else {
+            return null;
+        }
+
+    }
+
+
 
 }

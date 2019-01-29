@@ -33,8 +33,8 @@ public class NicknameSessionListener implements HttpSessionListener {
         System.out.println("Koniec używania " + nicknameToBeFree.getName());
 
         // dla testów - też się nie wykonuje
-//        List<Nickname> list = nicknameService.getAllNicknames();
-//        System.out.println(list.get(3).getName());
+        List<Nickname> list = nicknameService.getAllNicknames();
+        System.out.println(list.get(3).getName());
 
         // ten kod się nie wykonuje
         try {

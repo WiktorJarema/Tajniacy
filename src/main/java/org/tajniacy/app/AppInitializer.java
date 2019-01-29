@@ -22,7 +22,7 @@ public class AppInitializer extends AbstractAnnotationConfigDispatcherServletIni
         return new String[]{"/"};
     }
 
-    // skopiowane z neta
+    // skopiowane z neta, niepotrzebne, ale niech zostanie na razie
 //    @Override
 //    protected Filter[] getServletFilters() {
 //        return new Filter[] { new HiddenHttpMethodFilter() };
