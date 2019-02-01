@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.tajniacy.model.Game;
 import org.tajniacy.model.GameTable;
+import org.tajniacy.model.GameWord;
 import org.tajniacy.model.Word;
 import org.tajniacy.repository.GameJpaRepository;
 import org.tajniacy.repository.GameTableJpaRepository;
@@ -42,59 +43,97 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public void deleteGame(Game game) {
+        GameTable gameTable = gameTableJpaRepository.findByGame(game);
+        gameTable.deleteGameFromGameTable(game);
         gameJpaRepository.delete(game);
     }
 
-    // to do wyrzucenia, zrobiłem dla testów
-//    public void createNewGame() {
-//        Game game = new Game();
-//        System.out.println(game);
-//        gameJpaRepository.save(game);
-//    }
+    @Override
+    public void deleteGameByGameTableName(String gameTableName) {
+        GameTable gameTable = gameTableJpaRepository.findByNameIgnoreCase(gameTableName);
+        gameTable.deleteGameFromGameTable(gameTable.getGame());
+        gameJpaRepository.deleteGameByGameTable_NameIgnoreCase(gameTableName);
+    }
+
+    @Override
+    public void deleteGameByGameTable(GameTable gameTable) {
+        gameTable.deleteGameFromGameTable(gameTable.getGame());
+        gameJpaRepository.deleteGameByGameTable(gameTable);
+    }
 
     @Override
     public Game createNewGame(GameTable gameTable) {
         Game game = new Game(9l, 8l, "redTeamSeat1");
-//        Game game = new Game();
-//        System.out.println(game);
-        System.out.println("wewnątrz createNewGame w GameService");
-//        gameTable.setGame(game);
-        System.out.println(game);
-//        gameTableJpaRepository.save(gameTable);
-//        gameJpaRepository.save(game);
-//        gameJpaRepository.save(game);
-        System.out.println("wewnątrz createNewGame w GameService po zapisie");
-//        List<Word> words = wordService.get25RandomWords();
-//        for (Word element : words) {
-//            System.out.println(element.getWord());
-//        }
-//        System.out.println(words.size());
-//
-//        List<String> cardTypes = new ArrayList<>();
-//
-//        for (int i = 0; i < 8; i++) {
-//            cardTypes.add("red");
-//            System.out.println("utwórz nową kartę");
-//            cardTypes.add("blue");
-//            cardTypes.add("neutral");
-//        }
-//        cardTypes.add("red");
-//        for (String element : cardTypes) {
-//            System.out.println(element);
-//        }
-//        Collections.shuffle(cardTypes);
-//
-//        int test = 0;
-//        for (int i = 0; i < 25; i++) {
-//            System.out.println("Utwórz nowe słowo");
-//            gameWordService.createNewGameWord(game, words.get(i).getWord(), cardTypes.get(i));
-//            test = i;
-//        }
-//        System.out.println("wartość test: " + test);
-//
-//        gameJpaRepository.save(game);
+        gameTable.setGame(game);
+
+        List<Word> words = wordService.get25RandomWords();
+        for (Word element : words) {
+            System.out.println(element.getWord());
+        }
+
+        List<String> cardTypes = new ArrayList<>();
+
+        for (int i = 0; i < 8; i++) {
+            cardTypes.add("red");
+            cardTypes.add("blue");
+            cardTypes.add("neutral");
+        }
+        cardTypes.add("red");
+
+        for (String element : cardTypes) {
+            System.out.println(element);
+        }
+        Collections.shuffle(cardTypes);
+
+        for (int i = 0; i < 25; i++) {
+            gameWordService.createNewGameWord(game, words.get(i).getWord(), cardTypes.get(i));
+        }
+
+        gameJpaRepository.save(game);
 
         return game;
+    }
+
+    @Override
+    public List<Game> findAllGames() {
+        return gameJpaRepository.findAll();
+    }
+
+    @Override
+    public Game findGameById(Long gameId) {
+        return gameJpaRepository.findById(gameId);
+    }
+
+    @Override
+    public Game findGameByGameTable(GameTable gameTable) {
+        return gameJpaRepository.findGameByGameTable_NameIgnoreCase(gameTable.getName());
+    }
+
+    @Override
+    public Game findGameByGameTableName(String gameTableName) {
+        return gameJpaRepository.findGameByGameTable_NameIgnoreCase(gameTableName);
+    }
+
+    @Override
+    public void turnChange(String gameTableName) {
+
+        Game game = gameJpaRepository.findGameByGameTable_NameIgnoreCase(gameTableName);
+        String currentWhoseTurn = game.getPlayerTurnName();
+
+        switch (currentWhoseTurn) {
+            case "redTeamSeat1":
+                game.setPlayerTurnName("redTeamSeat2");
+                break;
+            case "redTeamSeat2":
+                game.setPlayerTurnName("blueTeamSeat1");
+                break;
+            case "blueTeamSeat1":
+                game.setPlayerTurnName("blueTeamSeat2");
+                break;
+            case "blueTeamSeat2":
+                game.setPlayerTurnName("redTeamSeat1");
+                break;
+        }
     }
 
 

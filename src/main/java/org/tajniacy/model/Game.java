@@ -1,5 +1,7 @@
 package org.tajniacy.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +15,7 @@ public class Game {
 //    @Column(name = "game_id")
     private Long id;
 
+    @JsonIgnore
     @OneToOne//(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "game_id") // to jak włącze to nie działa
 //    @Column(name = "game_id") // to jak włącze to nie działa
@@ -30,7 +33,8 @@ public class Game {
     @Column(name = "player_turn_name")
     private String playerTurnName;
 
-    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
+    @JsonIgnore
+    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<GameWord> gameWords = new ArrayList<>();
 
 
@@ -101,7 +105,7 @@ public class Game {
     public String toString() {
         return "Game{" +
                 "id=" + id +
-                ", gameTable=" + gameTable +
+
                 ", redTeamWordsLeft=" + redTeamWordsLeft +
                 ", blueTeamWordsLeft=" + blueTeamWordsLeft +
                 ", playerTurnName='" + playerTurnName + '\'' +

@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "game_words")
-public class GameWord {
+public class GameWord implements Cloneable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -13,6 +13,7 @@ public class GameWord {
 
     private String word;
 
+    // zmienić na cardType albo wordType
     @Column(name = "team_colour")
     private String teamColour;
 
@@ -57,11 +58,11 @@ public class GameWord {
         this.teamColour = teamColour;
     }
 
-    public boolean isHit() {
+    public boolean getIsHit() {
         return isHit;
     }
 
-    public void setHit(boolean hit) {
+    public void setIsHit(boolean hit) {
         isHit = hit;
     }
 
@@ -73,5 +74,14 @@ public class GameWord {
         this.game = game;
     }
 
-
+    @Override
+    public GameWord clone() {
+        GameWord clone = null;
+        try {
+            clone = (GameWord) super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return clone;
+    }
 }

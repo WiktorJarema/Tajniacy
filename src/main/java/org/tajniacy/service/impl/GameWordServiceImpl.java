@@ -16,12 +16,13 @@ public class GameWordServiceImpl implements GameWordService {
 
     @Override
     public void createNewGameWord(Game game, String word, String teamColor) {
-//        GameWord gameWord = new GameWord(game, word, teamColor);
-        GameWord gameWord = new GameWord();
-        System.out.println("czy tu ok?");
-        System.out.println(gameWord);
+        GameWord gameWord = new GameWord(word, teamColor);
+        game.addGameWordToGame(gameWord);
         gameWordJpaRepository.save(gameWord);
-        System.out.println("a jak tu?");
     }
 
+    @Override
+    public GameWord findGameWordById(Long gameWordId) {
+        return gameWordJpaRepository.findOne(gameWordId);
+    }
 }

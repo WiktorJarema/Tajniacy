@@ -29,14 +29,14 @@ public class MemoryNicknameRepository implements NicknameRepository {
     @Override
     public Nickname findNicknameById(Long id) throws NicknameNotFoundException {
         for (int i = 0; i < nicknames.size() - 1; i++) {
-            System.out.println("id" + id);
-            System.out.println(nicknames.get(i).getId());
-            System.out.println(nicknames.get(i).getName());
+//            System.out.println("id" + id);
+//            System.out.println(nicknames.get(i).getId());
+//            System.out.println(nicknames.get(i).getName());
             if (nicknames.get(i).getId().compareTo(id) ==  0) {
-                System.out.println("to jest " + nicknames.get(i).getName());
+//                System.out.println("to jest " + nicknames.get(i).getName());
                 return nicknames.get(i);
             }
-            System.out.println();
+//            System.out.println();
         }
         throw new NicknameNotFoundException();
     }

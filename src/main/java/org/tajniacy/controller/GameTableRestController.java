@@ -6,12 +6,17 @@ import org.springframework.web.bind.annotation.*;
 import org.tajniacy.model.*;
 import org.tajniacy.service.GameService;
 import org.tajniacy.service.GameTableService;
+import org.tajniacy.service.GameWordService;
 import org.tajniacy.service.NicknameService;
 import javax.servlet.http.HttpSession;
+import javax.transaction.Transactional;
 import javax.xml.ws.Response;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
+@Transactional
 public class GameTableRestController {
 
     @Autowired
@@ -22,6 +27,9 @@ public class GameTableRestController {
 
     @Autowired
     GameService gameService;
+
+    @Autowired
+    GameWordService gameWordService;
 
 
     @GetMapping(path = "/tables")
@@ -44,14 +52,125 @@ public class GameTableRestController {
 
     // na razie dla testów
     @GetMapping(path = "/tables/{gameTableName}/newgame")
-    public Game newGame(@PathVariable(name = "gameTableName") String gameTableName,
+    public List<GameWord> newGame(@PathVariable(name = "gameTableName") String gameTableName,
                                HttpSession session) {
 
         GameTable gameTable = gameTableService.findGameTableByName(gameTableName);
         Game game = gameTableService.createNewGame(gameTable);
-//        return game.getAllWord();
+
+        return game.getGameWords();
+
+    }
+
+    @GetMapping(path = "/tables/{gameTableName}/game")
+    public Game game(@PathVariable(name = "gameTableName") String gameTableName,
+                        HttpSession session) {
+
+        Game game = gameService.findGameByGameTableName(gameTableName);
         return game;
 
+    }
+
+    @GetMapping(path = "/tables/{gameTableName}/gamewords")
+    public List<GameWord> getGameWords(@PathVariable(name = "gameTableName") String gameTableName,
+                     HttpSession session) {
+
+
+        Object nicknameObject = session.getAttribute("nickname");
+        if (nicknameObject == null) {
+            return null;
+        } else {
+            Nickname usedNickname = (Nickname) nicknameObject;
+            GameTable gameTable = gameTableService.findGameTableByName(gameTableName);
+            Game game = gameService.findGameByGameTableName(gameTableName);
+            System.out.println("Zapytanie od: " + usedNickname.getName());
+            System.out.println("Id gracza red team seat 1: " + gameTable.getPlayerRedFirstId());
+            System.out.println("Id gracza red team seat 2: " + gameTable.getPlayerRedSecondId());
+            System.out.println("Id gracza blue team seat 1: " + gameTable.getPlayerBlueFirstId());
+            System.out.println("Id gracza blue team seat 2: " + gameTable.getPlayerBlueSecondId());
+            List<GameWord> originalGameWords = game.getGameWords();
+
+            if (usedNickname.getId() == gameTable.getPlayerRedFirstId() || usedNickname.getId() == gameTable.getPlayerBlueFirstId()) {
+//                System.out.println("słowa oryginalne");
+                return originalGameWords;
+            } else {
+//                System.out.println("słowa zmienione");
+                List <GameWord> gameWordsWithCardTypeUnknown = new ArrayList<>();
+                for(GameWord element : originalGameWords) {
+                    GameWord newElement = element.clone();
+                    if (!newElement.getIsHit()) {
+                        newElement.setTeamColour("unknown");
+                    }
+                    gameWordsWithCardTypeUnknown.add(newElement);
+                }
+
+                return gameWordsWithCardTypeUnknown;
+            }
+
+        }
+
+    }
+
+
+    @GetMapping(path = "/tables/{gameTableName}/checkgameword/{gameWordId}")
+    public GameWord checkGameWord(@PathVariable(name = "gameTableName") String gameTableName,
+                                       @PathVariable(name = "gameWordId") Long gameWordId,
+                                       HttpSession session) {
+
+        System.out.println("początek metody sprawdzania słowa");
+
+        Object nicknameObject = session.getAttribute("nickname");
+        if (nicknameObject == null) {
+            return null;
+        } else {
+            Nickname usedNickname = (Nickname) nicknameObject;
+            GameTable gameTable = gameTableService.findGameTableByName(gameTableName);
+            Game game = gameService.findGameByGameTableName(gameTableName);
+            String whoseTurn = game.getPlayerTurnName();
+
+//            String playerSeat = null;
+//            Long playerId = usedNickname.getId();
+//            if (playerId == gameTable.getPlayerRedFirstId()) {
+//                playerSeat = "redTeamSeat1";
+//            } else if (playerId == gameTable.getPlayerRedSecondId()) {
+//                playerSeat = "redTeamSeat2";
+//            } else if (playerId == gameTable.getPlayerBlueFirstId()) {
+//                playerSeat = "blueTeamSeat1";
+//            } else if (playerId == gameTable.getPlayerBlueFirstId()) {
+//                playerSeat = "blueTeamSeat2";
+//            }
+//
+//            if (playerSeat.equals(whoseTurn)) {
+                GameWord gameWord = gameWordService.findGameWordById(gameWordId);
+                gameWord.setIsHit(true);
+                return gameWord;
+//            } else {
+//                return null;
+//            }
+
+        }
+
+
+    }
+
+    // to jest tylko dla potrzeb testowania, normlanie dla potrzeb REST powirnien tu być DeleteMapping
+    @GetMapping(path = "/tables/{gameTableName}/deletegame", produces = "text/html; charset=UTF-8")
+    public String deleteGame(@PathVariable(name = "gameTableName") String gameTableName,
+                     HttpSession session) {
+
+//        Game game = gameService.findGameByGameTableName(gameTableName);
+//        System.out.println(game);
+//        gameService.deleteGame(game);
+        gameTableService.deleteGame(gameTableName);
+//        gameService.deleteGameById(game.getId());
+//        gameService.deleteGameByGameTableName(gameTableName);
+        return "gra usunięta";
+
+    }
+
+    @GetMapping(path = "/games")
+    public List<Game> getAllGames() {
+        return gameService.findAllGames();
     }
 
 //    @GetMapping(path = "/tables/{gameTableName}/game/words")

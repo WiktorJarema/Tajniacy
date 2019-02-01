@@ -1,5 +1,6 @@
 package org.tajniacy.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.NotEmpty;
 import javax.persistence.*;
 
@@ -40,6 +41,7 @@ public class GameTable {
     private Long startingTeamNumberOfWords;
 
     // wg artykułu najlepszy mapping OneToOne jest unidirectional, dlatego odkomentowany getGame i setGame - na końcu
+    @JsonIgnore
     @OneToOne(mappedBy = "gameTable",
             cascade = CascadeType.ALL/*,
             fetch = FetchType.LAZY*/)
@@ -139,6 +141,12 @@ public class GameTable {
     public void setGame(Game game) {
         this.game = game;
         game.setGameTable(this);
+    }
+
+    // nie wiem czy to potrzebne, ale próbuję, bo nie dziala mi usuwanie gry
+    public void deleteGameFromGameTable(Game game) {
+        this.game = null;
+        game.setGameTable(null);
     }
 
     @Override

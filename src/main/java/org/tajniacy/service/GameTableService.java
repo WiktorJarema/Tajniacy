@@ -35,4 +35,6 @@ public interface GameTableService {
     Game createNewGame(GameTable gameTable);
 
     void createNewTable(String gameTableName);
+
+    void deleteGame(String gameTableName);
 }

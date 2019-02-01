@@ -36,4 +36,14 @@ public class Nickname {
         isFree = value;
     }
 
+
+    @Override
+    public String toString() {
+        return "Nickname{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", isFree=" + isFree +
+                '}';
+    }
+
 }

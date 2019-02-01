@@ -157,6 +157,9 @@ public class GameTableServiceImpl implements GameTableService  {
 
     @Override
     public Game createNewGame(GameTable gameTable) {
+        // nie działa mi usuwanie a potem tworzenie nowego stołu, nie wiem dlaczego
+//        gameService.deleteGameByGameTable(gameTable);
+//        gameService.deleteGameByGameTableName(gameTable.getName());
         Game game = gameService.createNewGame(gameTable);
         return game;
     }
@@ -165,5 +168,10 @@ public class GameTableServiceImpl implements GameTableService  {
     public void createNewTable(String gameTableName) {
         GameTable gameTable = new GameTable(gameTableName);
         gameTableJpaRepository.save(gameTable);
+    }
+
+    @Override
+    public void deleteGame(String gameTableName) {
+        gameService.deleteGameByGameTableName(gameTableName);
     }
 }
