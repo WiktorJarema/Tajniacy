@@ -108,11 +108,21 @@ body {
     margin: 0 0 0 0;
     width: 560px;
     height: 30px;
-    display: flex;
+    /*display: flex;*/
+    padding: 0 10px 0 10px;
+    text-align: center;
+    vertical-align: middle;
     /*background-color: transparent;*/
     /*border: thin solid #d5d5d5;*/
     border: 0;
     /*border-top: 0;*/
+}
+
+.clue-word {
+    /*height: 100%;*/
+    /*vertical-align: middle;*/
+    width: 170px;
+    text-align: left;
 }
 
 .red-team-color {

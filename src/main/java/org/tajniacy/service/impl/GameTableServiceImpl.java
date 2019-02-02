@@ -156,6 +156,24 @@ public class GameTableServiceImpl implements GameTableService  {
     }
 
     @Override
+    public String getWhoseTurnSeatName(String gameTableName) {
+        Game game = gameService.findGameByGameTableName(gameTableName);
+
+        // decyduje się na zwracanie nazwy miejsca, nie numeru
+//        switch(game.getPlayerTurnName()) {
+//            case "redTeamSeat1":
+//                return 1;
+//            case "redTeamSeat2":
+//                return 2;
+//            case "blueTeamSeat1":
+//                return 3;
+//            case "blueTeamSeat2":
+//                return 4;
+//        }
+        return game.getPlayerTurnName();
+    }
+
+    @Override
     public Game createNewGame(GameTable gameTable) {
         // nie działa mi usuwanie a potem tworzenie nowego stołu, nie wiem dlaczego
 //        gameService.deleteGameByGameTable(gameTable);

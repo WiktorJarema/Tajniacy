@@ -38,7 +38,7 @@ public class GameTableRestController {
     }
 
     @GetMapping(path = "/tables/{gameTableName}")
-    public GameTable getAllGameTables(@PathVariable(name = "gameTableName") String gameTableName,
+    public GameTable getGameTable(@PathVariable(name = "gameTableName") String gameTableName,
                                       HttpSession session) {
 
         Object nicknameObject = session.getAttribute("nickname");
@@ -63,7 +63,7 @@ public class GameTableRestController {
     }
 
     @GetMapping(path = "/tables/{gameTableName}/game")
-    public Game game(@PathVariable(name = "gameTableName") String gameTableName,
+    public Game getGame(@PathVariable(name = "gameTableName") String gameTableName,
                         HttpSession session) {
 
         Game game = gameService.findGameByGameTableName(gameTableName);
@@ -71,9 +71,36 @@ public class GameTableRestController {
 
     }
 
+    // to myślę, że nie potrzebne, całą grę będę zwracał
+//    @GetMapping(path = "/tables/{gameTableName}/getwhoseturn")
+//    public String getWhoseTurn(@PathVariable(name = "gameTableName") String gameTableName,
+//                               HttpSession session) {
+//
+//        return gameTableService.getWhoseTurnSeatName(gameTableName);
+//
+//    }
+
+    @PostMapping(path = "tables/{gameTableName}", produces = "text/html; charset=UTF-8")
+    public String passClue(@PathVariable(name = "gameTableName") String gameTableName,
+                           @RequestParam(name = "clueWord") String clueWord,
+                           HttpSession session) {
+        System.out.println(clueWord);
+        Game game = gameService.findGameByGameTableName(gameTableName);
+        game.setClueWord(clueWord);
+
+        return "wskazówka przyjęta";
+    }
+
+    // kopia z zadań z modułu 5
+//    @ResponseBody
+//    @PostMapping(path = "/form", produces = "text/html; charset=UTF-8")
+//    public String showParam(@RequestParam(name = "paramName") String param) {
+//        return "Wartość parametru: " + param;
+//    }
+
     @GetMapping(path = "/tables/{gameTableName}/gamewords")
     public List<GameWord> getGameWords(@PathVariable(name = "gameTableName") String gameTableName,
-                     HttpSession session) {
+                                       HttpSession session) {
 
 
         Object nicknameObject = session.getAttribute("nickname");

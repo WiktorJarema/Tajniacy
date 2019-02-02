@@ -93,66 +93,133 @@ $(document).ready(function () {
     //     })
 
 
-    // utworzenie stołów w home i odebranie słów
-    $.ajax({
-        url: "http://localhost:8080/tables" + window.location.pathname + "/gamewords",
-        // url: "http://localhost:8080/tables",
-        //data: {},
-        type: "GET",
-        dataType: "json"
-    })
-        .done(function(result) {
+    // odebranie słów
+    var interval = setInterval(function () {
 
-            var gameWordsButtons = $(".gameword");
+        $.ajax({
+            url: "http://localhost:8080/tables" + window.location.pathname + "/gamewords",
+            // url: "http://localhost:8080/tables",
+            //data: {},
+            type: "GET",
+            dataType: "json"
+        })
+            .done(function(result) {
 
-            console.log(gameWordsButtons);
+                var gameWordsButtons = $(".gameword");
 
-            for (var i = 0; i < result.length; i++) {
+                // console.log(gameWordsButtons);
 
-                var currentButton = gameWordsButtons.eq(i);
-                currentButton.text(result[i].word);
-                currentButton.attr("data-id", result[i].id);
-                currentButton.on("click", checkGameWord);
+                for (var i = 0; i < result.length; i++) {
 
-                if (result[i].isHit == false) {
-                    console.log("cart type: " + result[i].teamColour);
-                    // zmienić na cardType
-                    switch(result[i].teamColour) {
-                        case "red":
-                            currentButton.attr("disabled",true);
-                            currentButton.addClass("card-type-red");
-                            break;
-                        case "blue":
-                            currentButton.prop("disabled",true);
-                            currentButton.addClass("card-type-blue");
-                            break;
-                        case "neutral":
-                            currentButton.prop("disabled",true);
-                            currentButton.addClass("card-type-neutral");
-                            break;
-                    }
-                } else if (result[i].isHit == true) {
-                    switch(result[i].teamColour) {
-                        case "red":
-                            currentButton.attr("disabled",true);
-                            currentButton.addClass("hit-red");
-                            break;
-                        case "blue":
-                            currentButton.prop("disabled",true);
-                            currentButton.addClass("hit-blue");
-                            break;
-                        case "neutral":
-                            currentButton.prop("disabled",true);
-                            currentButton.addClass("hit-neutral");
-                            break;
+                    var currentButton = gameWordsButtons.eq(i);
+                    currentButton.text(result[i].word);
+                    currentButton.attr("data-id", result[i].id);
+                    currentButton.on("click", checkGameWord);
+
+                    if (result[i].isHit == false) {
+                        // console.log("cart type: " + result[i].teamColour);
+                        // zmienić na cardType
+                        switch(result[i].teamColour) {
+                            case "red":
+                                currentButton.attr("disabled",true);
+                                currentButton.addClass("card-type-red");
+                                break;
+                            case "blue":
+                                currentButton.prop("disabled",true);
+                                currentButton.addClass("card-type-blue");
+                                break;
+                            case "neutral":
+                                currentButton.prop("disabled",true);
+                                currentButton.addClass("card-type-neutral");
+                                break;
+                        }
+                    } else if (result[i].isHit == true) {
+                        switch(result[i].teamColour) {
+                            case "red":
+                                currentButton.attr("disabled",true);
+                                currentButton.removeClass("card-type-red");
+                                currentButton.addClass("hit-red");
+                                break;
+                            case "blue":
+                                currentButton.prop("disabled",true);
+                                currentButton.removeClass("card-type-blue");
+                                currentButton.addClass("hit-blue");
+                                break;
+                            case "neutral":
+                                currentButton.prop("disabled",true);
+                                currentButton.removeClass("card-type-neutral");
+                                currentButton.addClass("hit-neutral");
+                                break;
+                        }
                     }
                 }
-            }
 
+            })
+            .fail(function(xhr,status,err) {
+                console.log("błąd z odbiorem slów")
+            })
+
+    // odbieranie wskazówki, przez odbiór gry
+    // var interval = setInterval(function () {
+        $.ajax({
+            url: "http://localhost:8080/tables" + window.location.pathname + "/game",
+            //data: {},
+            type: "GET",
+            dataType: "json"
         })
-        .fail(function(xhr,status,err) {
-            console.log("błąd z odbiorem slów")
-        })
+            .done(function(result) {
+
+                var clueWord = $("#clue-word");
+                // console.log(result.clueWord);
+                clueWord.text(result.clueWord);
+
+            })
+            .fail(function(xhr,status,err) {
+                console.log("błąd z odbiorem slów")
+            })
+
+    }, 5000);
+
+    // wysyłanie wskazówki
+    $('#clue-word-form').on('submit', function(e) {
+        e.preventDefault();
+
+        $.ajax({
+            url: "http://localhost:8080/tables" + window.location.pathname,
+            type: $(this).attr('method'),
+            data: $(this).serialize(),
+            dataType: "text",
+            success: function() {
+                // alert("Wysłałeś wskazówkę!");
+                $("#clue-word").text($('input[name="clueWord"]').val());
+
+                $("#clue-word-form").trigger("reset");
+
+                // $('#clue-word-form').val('');
+            }
+        });
+
+    });
+
+
+    // wysyłanie wskazówki, inna metoda, nie dokończona
+    // $.ajax({
+    //     url: "http://localhost:8080/tables" + window.location.pathname,
+    //     //data: {},
+    //     type: "POST",
+    //     dataType: "json"
+    // })
+    //     .done(function(result) {
+    //
+    //         var clueWord = $("#clue-word");
+    //         console.log(result.clueWord);
+    //         clueWord.text(result.clueWord);
+    //
+    //     })
+    //     .fail(function(xhr,status,err) {
+    //         console.log("błąd z odbiorem slów")
+    //     })
+
 
 
     // pytanie o mój nickname
@@ -167,6 +234,7 @@ $(document).ready(function () {
                 var nicknameName = result.name;
                 $("#nickname").text("Twój nick: " + nicknameName);
                 console.log("chyba działa");
+
                 console.log(nicknameName);
 
         })

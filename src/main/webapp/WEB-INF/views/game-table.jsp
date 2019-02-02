@@ -36,19 +36,22 @@
         <div class="game-table_players">
             <div class="player_container">
                 <div class="red-team-color"></div>
-                <div class="player-name_container" data-seat-id="1">${redTeamSeat1}</div>
+                <div class="player-name_container" data-seat-name="redTeamSeat1">${redTeamSeat1}</div>
             </div>
-            <div class="gap"></div>
+            <div class="gap" style="display: flex; align-items: center;">
+                <div class="clue-word">Aktualna wskazówka:</div>
+                <div  class="clue-word" id="clue-word"></div>
+            </div>
             <div class="player_container">
                 <div class="blue-team-color"></div>
-                <div class="player-name_container" data-seat-id="3">${blueTeamSeat1}</div>
+                <div class="player-name_container" data-seat-name="blueTeamSeat1">${blueTeamSeat1}</div>
             </div>
         </div>
 
         <%--gra--%>
         <div class="game-table_game">
             <div class="gamewords-row">
-                <button class="gameword">słowo</button>
+                <button class="gameword"><span>słowo</span></button>
                 <button class="gameword">słowo</button>
                 <button class="gameword">słowo</button>
                 <button class="gameword">słowo</button>
@@ -89,12 +92,22 @@
         <div class="game-table_players">
             <div class="player_container">
                 <div class="red-team-color"></div>
-                <div class="player-name_container" data-seat-id="2">${redTeamSeat2}</div>
+                <div class="player-name_container" data-seat-name="redTeamSeat2">${redTeamSeat2}</div>
             </div>
-            <div class="gap"></div>
+            <div class="gap">
+                <form action="" method="post" id="clue-word-form">
+                    <%--<label>Wskazówka:--%>
+                        <input type="text" name="clueWord" placeholder="Wprowadź wskazówkę...">
+                    <%--</label>--%>
+
+                    <button type="submit">Wyślij</button>
+                    <%--<input type="submit" value = "send">--%>
+                </form>
+
+            </div>
             <div class="player_container">
                 <div class="blue-team-color"></div>
-                <div class="player-name_container" data-seat-id="4">${blueTeamSeat2}</div>
+                <div class="player-name_container" data-seat-name="blueTeamSeat2">${blueTeamSeat2}</div>
             </div>
         </div>
 

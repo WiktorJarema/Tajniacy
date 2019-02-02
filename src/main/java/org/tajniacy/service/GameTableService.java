@@ -32,6 +32,8 @@ public interface GameTableService {
 
     String getPlayerNameFromBlueTeamSeat2(String gameTableName) throws NicknameNotFoundException;
 
+    String getWhoseTurnSeatName(String gameTableName);
+
     Game createNewGame(GameTable gameTable);
 
     void createNewTable(String gameTableName);

@@ -33,10 +33,20 @@ public class Game {
     @Column(name = "player_turn_name")
     private String playerTurnName;
 
+    @Column(name = "clue_word")
+    private String clueWord;
+
     @JsonIgnore
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<GameWord> gameWords = new ArrayList<>();
 
+    public String getClueWord() {
+        return clueWord;
+    }
+
+    public void setClueWord(String clueWord) {
+        this.clueWord = clueWord;
+    }
 
     public Game() {
     }
