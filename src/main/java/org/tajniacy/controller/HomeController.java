@@ -82,16 +82,17 @@ public class HomeController {
         if (nicknameObject == null) {
             return "redirect:http://google.pl";
         } else {
+
             model.addAttribute("gameTable", gameTableService.findGameTableByName(gameTableName).getName());
-
-            Nickname usedNickname = (Nickname) nicknameObject;
-            Long playerId = usedNickname.getId();
-            gameTableService.addPlayerToGameTable(gameTableName, playerId);
-
-            model.addAttribute("redTeamSeat1", gameTableService.getPlayerNameFromRedTeamSeat1(gameTableName));
-            model.addAttribute("redTeamSeat2", gameTableService.getPlayerNameFromRedTeamSeat2(gameTableName));
-            model.addAttribute("blueTeamSeat1", gameTableService.getPlayerNameFromBlueTeamSeat1(gameTableName));
-            model.addAttribute("blueTeamSeat2", gameTableService.getPlayerNameFromBlueTeamSeat2(gameTableName));
+// wyłączam, bo realizuję dodawanie do stołu "normalnie"
+//            Nickname usedNickname = (Nickname) nicknameObject;
+//            Long playerId = usedNickname.getId();
+//            gameTableService.addPlayerToGameTable(gameTableName, playerId);
+//
+//            model.addAttribute("redTeamSeat1", gameTableService.getPlayerNameFromRedTeamSeat1(gameTableName));
+//            model.addAttribute("redTeamSeat2", gameTableService.getPlayerNameFromRedTeamSeat2(gameTableName));
+//            model.addAttribute("blueTeamSeat1", gameTableService.getPlayerNameFromBlueTeamSeat1(gameTableName));
+//            model.addAttribute("blueTeamSeat2", gameTableService.getPlayerNameFromBlueTeamSeat2(gameTableName));
 
             return "game-table";
         }

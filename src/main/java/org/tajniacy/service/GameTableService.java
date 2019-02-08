@@ -15,9 +15,11 @@ public interface GameTableService {
 
     List<GameTable> findAllGameTables();
 
-    void addPlayerToGameTable(String gameTableName, Long seatNumber, Long playerId);
+    void addPlayerToGameTable(String gameTableName, Long seatId, Long playerId);
 
-    void addPlayerToGameTable(String gameTableName, Long playerId);
+//    void addPlayerToGameTable(String gameTableName, Long playerId);
+
+    void deletePlayerFromGameTable(String gameTableName, Long seatId, Long playerId);
 
     // metoda na potrzeby testów, wykorzystywana w home na starcie
 //    void clearPlayersAtGameTables();
@@ -35,6 +37,8 @@ public interface GameTableService {
     String getWhoseTurnSeatName(String gameTableName);
 
     Game createNewGame(GameTable gameTable);
+
+//    void createNewGameWords(GameTable gameTable);
 
     void createNewTable(String gameTableName);
 

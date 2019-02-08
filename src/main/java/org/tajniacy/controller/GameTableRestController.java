@@ -62,6 +62,18 @@ public class GameTableRestController {
 
     }
 
+    // na razie dla testów
+    @PatchMapping(path = "/tables/{gameTableName}/newgamewords")
+    public String newGameWords(@PathVariable(name = "gameTableName") String gameTableName,
+                                  HttpSession session) {
+
+        GameTable gameTable = gameTableService.findGameTableByName(gameTableName);
+        gameService.createNewGameWords(gameTable);
+
+        return "wygenerowane nowe słowa";
+
+    }
+
     @GetMapping(path = "/tables/{gameTableName}/game")
     public Game getGame(@PathVariable(name = "gameTableName") String gameTableName,
                         HttpSession session) {
@@ -84,11 +96,29 @@ public class GameTableRestController {
     public String passClue(@PathVariable(name = "gameTableName") String gameTableName,
                            @RequestParam(name = "clueWord") String clueWord,
                            HttpSession session) {
-        System.out.println(clueWord);
+//        System.out.println(clueWord);
         Game game = gameService.findGameByGameTableName(gameTableName);
         game.setClueWord(clueWord);
 
-        return "wskazówka przyjęta";
+        Object nicknameObject = session.getAttribute("nickname");
+        if (nicknameObject != null) {
+            Nickname usedNickname = (Nickname) nicknameObject;
+
+            // ture może zmienić tylko gracz, którego jest obecnie tura
+            if (gameService.checkIfItIsHisTurn(gameTableName, usedNickname)) {
+                System.out.println("wewnątrz ifa od zmiany tury");
+                gameService.turnChange(gameTableName);
+                return "Wskazówka przyjęta, tura zmieniona";
+            } else {
+                return "Nie możesz zmienic tury, bo to nie twoja kolej";
+            }
+
+
+        }
+        return "nie ma cię na stole";
+        // to były jak nie było sprawdzania czy jest to tura gracza, który chce zmienić turę
+//        gameService.turnChange(gameTableName);
+//        return "Wskazówka przyjęta";
     }
 
     // kopia z zadań z modułu 5
@@ -110,11 +140,11 @@ public class GameTableRestController {
             Nickname usedNickname = (Nickname) nicknameObject;
             GameTable gameTable = gameTableService.findGameTableByName(gameTableName);
             Game game = gameService.findGameByGameTableName(gameTableName);
-            System.out.println("Zapytanie od: " + usedNickname.getName());
-            System.out.println("Id gracza red team seat 1: " + gameTable.getPlayerRedFirstId());
-            System.out.println("Id gracza red team seat 2: " + gameTable.getPlayerRedSecondId());
-            System.out.println("Id gracza blue team seat 1: " + gameTable.getPlayerBlueFirstId());
-            System.out.println("Id gracza blue team seat 2: " + gameTable.getPlayerBlueSecondId());
+//            System.out.println("Zapytanie od: " + usedNickname.getName());
+//            System.out.println("Id gracza red team seat 1: " + gameTable.getPlayerRedFirstId());
+//            System.out.println("Id gracza red team seat 2: " + gameTable.getPlayerRedSecondId());
+//            System.out.println("Id gracza blue team seat 1: " + gameTable.getPlayerBlueFirstId());
+//            System.out.println("Id gracza blue team seat 2: " + gameTable.getPlayerBlueSecondId());
             List<GameWord> originalGameWords = game.getGameWords();
 
             if (usedNickname.getId() == gameTable.getPlayerRedFirstId() || usedNickname.getId() == gameTable.getPlayerBlueFirstId()) {
@@ -155,28 +185,26 @@ public class GameTableRestController {
             Game game = gameService.findGameByGameTableName(gameTableName);
             String whoseTurn = game.getPlayerTurnName();
 
-//            String playerSeat = null;
-//            Long playerId = usedNickname.getId();
-//            if (playerId == gameTable.getPlayerRedFirstId()) {
-//                playerSeat = "redTeamSeat1";
-//            } else if (playerId == gameTable.getPlayerRedSecondId()) {
-//                playerSeat = "redTeamSeat2";
-//            } else if (playerId == gameTable.getPlayerBlueFirstId()) {
-//                playerSeat = "blueTeamSeat1";
-//            } else if (playerId == gameTable.getPlayerBlueFirstId()) {
-//                playerSeat = "blueTeamSeat2";
-//            }
-//
-//            if (playerSeat.equals(whoseTurn)) {
+
+
+            if (gameService.checkIfItIsHisTurn(gameTableName, usedNickname)) {
                 GameWord gameWord = gameWordService.findGameWordById(gameWordId);
+                String playersSeatName = gameService.getPlayersCurrentSeatName(gameTableName, usedNickname);
+                if (playersSeatName.equals("redTeamSeat1") || playersSeatName.equals("redTeamSeat2")) {
+                    if (!gameWord.getTeamColour().equals("red")) {
+                        gameService.turnChange(gameTableName);
+                    }
+                } else if (playersSeatName.equals("blueTeamSeat1") || playersSeatName.equals("blueTeamSeat2")) {
+                    if (!gameWord.getTeamColour().equals("blue")) {
+                        gameService.turnChange(gameTableName);
+                    }
+                }
                 gameWord.setIsHit(true);
                 return gameWord;
-//            } else {
-//                return null;
-//            }
-
+            } else {
+                return null;
+            }
         }
-
 
     }
 
@@ -230,26 +258,99 @@ public class GameTableRestController {
 //
 //    }
 
-    // działa, to na później, na razie robię przydzielenie gracza od razu po wejściu na stół w homeController
-    @PostMapping(path = "/tables/{gameTableName}/seats")
+    @PatchMapping(path = "/tables/{gameTableName}/{seatId:\\d{1}}")
     public String addPlayerToGameTable(@PathVariable(name = "gameTableName") String gameTableName,
-                                       @RequestBody MultiValueMap<String, String> info,
+                                       @PathVariable (name = "seatId") Long seatId,
+                                       @RequestBody MultiValueMap<String, String> seat,
                                        HttpSession session) {
-        System.out.println(info);
-//        Object nicknameObject = session.getAttribute("nickname");
-//        if (nicknameObject != null) {
-//            Nickname usedNickname = (Nickname) nicknameObject;
-//            Long playerId = usedNickname.getId();
-//            gameTableService.addPlayerToGameTable(playerId, gameTableName, seatNumber);
-//
-//
-//            return usedNickname.getName();
-//        } else {
-//            return null;
-//        }
-        return "ok";
+
+        String seatAction = seat.getFirst("seatAction");
+        System.out.println("miejsce: " + seatId + "; akcja: " + seatAction);
+
+        Object nicknameObject = session.getAttribute("nickname");
+        if (nicknameObject != null) {
+            Nickname usedNickname = (Nickname) nicknameObject;
+            Long playerId = usedNickname.getId();
+
+            if (seatAction.equals("take")) {
+                gameTableService.addPlayerToGameTable(gameTableName, seatId, playerId);
+            } else if (seatAction.equals("leave")) {
+                gameTableService.deletePlayerFromGameTable(gameTableName, seatId, playerId);
+            } else {
+                return null;
+            }
+
+            return usedNickname.getName();
+        } else {
+            return null;
+        }
 
     }
+
+    @PatchMapping(path = "/tables/{gameTableName}")
+    public String turnChange(@PathVariable(name = "gameTableName") String gameTableName,
+                                       HttpSession session) {
+
+        System.out.println("początek metody od zmiany tury");
+
+        Object nicknameObject = session.getAttribute("nickname");
+        if (nicknameObject != null) {
+            System.out.println("zmiana tury, nickname jest w sesji");
+            Nickname usedNickname = (Nickname) nicknameObject;
+
+            // ture może zmienić tylko gracz, którego jest obecnie tura
+            if (gameService.checkIfItIsHisTurn(gameTableName, usedNickname)) {
+                System.out.println("wewnątrz ifa od zmiany tury");
+                gameService.turnChange(gameTableName);
+                return "Tura zmieniona";
+            } else {
+
+                System.out.println();
+
+                return "coś nie halo";
+            }
+
+
+        }
+        return "Tura bez zmian";
+    }
+
+    @GetMapping(path = "/tables/{gameTableName}/checkwhoseturn")
+    public String checkWhoseTurn(@PathVariable(name = "gameTableName") String gameTableName,
+                             HttpSession session) {
+
+        Object nicknameObject = session.getAttribute("nickname");
+        if (nicknameObject != null) {
+
+            Game game = gameService.findGameByGameTableName(gameTableName);
+            return game.getPlayerTurnName();
+
+        }
+        return null;
+    }
+
+
+    // działa, to na później, na razie robię przydzielenie gracza od razu po wejściu na stół w homeController,
+    // to zrobiłem na zajęciach i działało, ale teraz inacej robie, metowa wyżej
+//    @PostMapping(path = "/tables/{gameTableName}/seats")
+//    public String addPlayerToGameTable(@PathVariable(name = "gameTableName") String gameTableName,
+//                                       @RequestBody MultiValueMap<String, String> info,
+//                                       HttpSession session) {
+//        System.out.println(info);
+////        Object nicknameObject = session.getAttribute("nickname");
+////        if (nicknameObject != null) {
+////            Nickname usedNickname = (Nickname) nicknameObject;
+////            Long playerId = usedNickname.getId();
+////            gameTableService.addPlayerToGameTable(playerId, gameTableName, seatNumber);
+////
+////
+////            return usedNickname.getName();
+////        } else {
+////            return null;
+////        }
+//        return "ok";
+//
+//    }
 
 //    @PUT
 //    @Path("{id}")

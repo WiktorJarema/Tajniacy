@@ -41,51 +41,84 @@ public class GameTableServiceImpl implements GameTableService  {
         return gameTableJpaRepository.findAll();
     }
 
-    // z tego nie korzystam, to na później
+    // z tego nie korzystam, to na później - teraz próbuję czy działa
     @Override
-    public void addPlayerToGameTable(String gameTableName, Long seatNumber, Long playerId) {
-        GameTable gameTable = gameTableJpaRepository.findByNameIgnoreCase(gameTableName);
-        if (seatNumber == 1) {
-            gameTable.setPlayerRedFirstId(playerId);
-        } else if (seatNumber == 2) {
-            gameTable.setPlayerRedFirstId(playerId);
-        } else if (seatNumber == 3) {
-            gameTable.setPlayerRedFirstId(playerId);
-        } else if (seatNumber == 4) {
-            gameTable.setPlayerRedFirstId(playerId);
-        } else {
-            System.out.println("coś nie tak");
-        }
-        gameTableJpaRepository.save(gameTable);
-    }
-
-    @Override
-    public void addPlayerToGameTable(String gameTableName, Long playerId) {
+    public void addPlayerToGameTable(String gameTableName, Long seatId, Long playerId) {
         GameTable gameTable = gameTableJpaRepository.findByNameIgnoreCase(gameTableName);
 
         if (gameTable.getPlayerRedFirstId() != playerId &&
                 gameTable.getPlayerRedSecondId() != playerId &&
                 gameTable.getPlayerBlueFirstId() != playerId &&
                 gameTable.getPlayerBlueSecondId() != playerId) {
-
-            if (gameTable.getPlayerRedFirstId() == 0) {
+            if (seatId == 1 && gameTable.getPlayerRedFirstId() == 0) {
                 gameTable.setPlayerRedFirstId(playerId);
-            } else if (gameTable.getPlayerRedSecondId() == 0) {
+            } else if (seatId == 2 && gameTable.getPlayerRedSecondId() == 0) {
                 gameTable.setPlayerRedSecondId(playerId);
-            } else if (gameTable.getPlayerBlueFirstId()== 0) {
+            } else if (seatId == 3 && gameTable.getPlayerBlueFirstId() == 0) {
                 gameTable.setPlayerBlueFirstId(playerId);
-            } else if (gameTable.getPlayerBlueSecondId() == 0) {
+            } else if (seatId == 4 && gameTable.getPlayerBlueSecondId() == 0) {
                 gameTable.setPlayerBlueSecondId(playerId);
             } else {
-                System.out.println("coś nie tak");
+                System.out.println("coś nie tak z dodawaniem gracza do stołu");
+                System.out.println(gameTable.getPlayerRedFirstId());
+                System.out.println(gameTable.getPlayerRedSecondId());
+                System.out.println(gameTable.getPlayerBlueFirstId());
+                System.out.println(gameTable.getPlayerBlueSecondId());
             }
             gameTableJpaRepository.save(gameTable);
 
-
         } else {
-            System.out.println("Gracz już jest na stole");
+            System.out.println("Gracz już jest na stole.");
         }
 
+    }
+
+    // tego już nie używam, to było tylko na czas jak nie było samodzielnego zajmowania stołu
+//    @Override
+//    public void addPlayerToGameTable(String gameTableName, Long playerId) {
+//        GameTable gameTable = gameTableJpaRepository.findByNameIgnoreCase(gameTableName);
+//
+//        if (gameTable.getPlayerRedFirstId() != playerId &&
+//                gameTable.getPlayerRedSecondId() != playerId &&
+//                gameTable.getPlayerBlueFirstId() != playerId &&
+//                gameTable.getPlayerBlueSecondId() != playerId) {
+//
+//            if (gameTable.getPlayerRedFirstId() == 0) {
+//                gameTable.setPlayerRedFirstId(playerId);
+//            } else if (gameTable.getPlayerRedSecondId() == 0) {
+//                gameTable.setPlayerRedSecondId(playerId);
+//            } else if (gameTable.getPlayerBlueFirstId()== 0) {
+//                gameTable.setPlayerBlueFirstId(playerId);
+//            } else if (gameTable.getPlayerBlueSecondId() == 0) {
+//                gameTable.setPlayerBlueSecondId(playerId);
+//            } else {
+//                System.out.println("coś nie tak");
+//            }
+//            gameTableJpaRepository.save(gameTable);
+//
+//
+//        } else {
+//            System.out.println("Gracz już jest na stole");
+//        }
+//
+//    }
+
+    @Override
+    public void deletePlayerFromGameTable(String gameTableName, Long seatId, Long playerId) {
+        GameTable gameTable = gameTableJpaRepository.findByNameIgnoreCase(gameTableName);
+
+        if (seatId == 1 && gameTable.getPlayerRedFirstId() == playerId) {
+            gameTable.setPlayerRedFirstId(0l);
+        } else if (seatId == 2 && gameTable.getPlayerRedSecondId() == playerId) {
+            gameTable.setPlayerRedSecondId(0l);
+        } else if (seatId == 3 && gameTable.getPlayerBlueFirstId() == playerId) {
+            gameTable.setPlayerBlueFirstId(0l);
+        } else if (seatId == 4 && gameTable.getPlayerBlueSecondId() == playerId) {
+            gameTable.setPlayerBlueSecondId(0l);
+        } else {
+            System.out.println("coś nie tak");
+        }
+        gameTableJpaRepository.save(gameTable);
     }
 
 //    @Override
@@ -181,6 +214,12 @@ public class GameTableServiceImpl implements GameTableService  {
         Game game = gameService.createNewGame(gameTable);
         return game;
     }
+
+    // z kontrolera odwołuję się od razu do gameService
+//    @Override
+//    public void createNewGameWords(GameTable gameTable) {
+//        gameService.createNewGameWords(gameTable);
+//    }
 
     @Override
     public void createNewTable(String gameTableName) {

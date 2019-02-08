@@ -1,9 +1,6 @@
 package org.tajniacy.service;
 
-import org.tajniacy.model.Game;
-import org.tajniacy.model.GameTable;
-import org.tajniacy.model.GameWord;
-import org.tajniacy.model.Word;
+import org.tajniacy.model.*;
 
 import java.util.List;
 
@@ -19,6 +16,8 @@ public interface GameService {
 
     Game createNewGame(GameTable gameTable);
 
+    void createNewGameWords(GameTable gameTable);
+
     List<Game> findAllGames();
 
     Game findGameById(Long gameId);
@@ -29,4 +28,7 @@ public interface GameService {
 
     void turnChange(String gameTableName);
 
+    boolean checkIfItIsHisTurn(String gameTableName, Nickname nickname);
+
+    String getPlayersCurrentSeatName(String gameTableName, Nickname nickname);
 }
