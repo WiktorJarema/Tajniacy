@@ -11,6 +11,7 @@ $(document).ready(function () {
         getGameWords();
         getGameAndUpdateClueAndWhoseTurn();
         getPlayersNames();
+        resetSessionTimeout();
     }, 5000);
 
 
@@ -518,20 +519,31 @@ $(document).ready(function () {
                 clueWord.text(result.clueWord);
 
                 var whoseTurn = result.playerTurnName;
-                console.log(whoseTurn);
+                console.log("teraz tura: " + whoseTurn);
 
                 if (whoseTurn == "redTeamSeat1") {
+                    console.log("tura redTeamSeat1, wyczyszenie zielonego pola");
+                    $("#redTeamSeat2").removeClass("players-turn");
+                    $("#blueTeamSeat1").removeClass("players-turn");
                     $("#blueTeamSeat2").removeClass("players-turn");
                     $("#redTeamSeat1").addClass("players-turn");
                 } else if (whoseTurn == "redTeamSeat2") {
                     $("#redTeamSeat1").removeClass("players-turn");
+                    $("#blueTeamSeat1").removeClass("players-turn");
+                    $("#blueTeamSeat2").removeClass("players-turn");
                     $("#redTeamSeat2").addClass("players-turn");
                 } else if (whoseTurn == "blueTeamSeat1") {
+                    $("#redTeamSeat1").removeClass("players-turn");
                     $("#redTeamSeat2").removeClass("players-turn");
+                    $("#blueTeamSeat2").removeClass("players-turn");
                     $("#blueTeamSeat1").addClass("players-turn");
                 } else if (whoseTurn == "blueTeamSeat2") {
+                    $("#redTeamSeat1").removeClass("players-turn");
+                    $("#redTeamSeat2").removeClass("players-turn");
                     $("#blueTeamSeat1").removeClass("players-turn");
                     $("#blueTeamSeat2").addClass("players-turn");
+                } else {
+                    console.log("tura redTeamSeat1, zadziałał else, nie wchodzi w czyszczenie pola");
                 }
 
             })
@@ -565,6 +577,24 @@ $(document).ready(function () {
     }
 
 
+
+    // reset MaxInactiveInterval sesji
+    function resetSessionTimeout() {
+        $.ajax({
+            url: "http://localhost:8080/resetsessiontimeout",
+            data: {},
+            type: "PATCH",
+            dataType: "text"
+        })
+            .done(function(result) {
+
+                console.log("Ok reset MaxInactiveInterval");
+
+            })
+            .fail(function(xhr,status,err) {
+                console.log("Błąd resetu MaxInactiveInterval");
+            })
+    }
 
 
 

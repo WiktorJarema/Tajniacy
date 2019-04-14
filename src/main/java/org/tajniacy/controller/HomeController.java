@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.tajniacy.exception.NicknameNotFoundException;
+import org.tajniacy.listener.NicknameSessionListener;
 import org.tajniacy.model.Game;
 import org.tajniacy.model.GameTable;
 import org.tajniacy.model.GameWord;
@@ -35,6 +36,27 @@ public class HomeController {
     @Autowired
     GameService gameService;
 
+
+    @ResponseBody
+    @GetMapping(path = "/test", produces = "text/html; charset=UTF-8")
+    public String tests() {
+
+        List<Nickname> list = nicknameService.getAllNicknames();
+
+
+        for (Nickname element : list) {
+            System.out.println(element.getName());
+        }
+
+        System.out.println();
+        System.out.println();
+
+        System.out.println(list.get(10).getName());
+
+        return "Koniec metody tests";
+    }
+
+
     @GetMapping(path = "/start", produces = "text/html; charset=UTF-8")
     @ResponseBody
     public String start() {
@@ -61,7 +83,7 @@ public class HomeController {
         if (nicknameObject == null) {
             Nickname newNickname = nicknameService.getNextFreeNickname();
             session.setAttribute("nickname", newNickname);
-            session.setMaxInactiveInterval(0);
+            session.setMaxInactiveInterval(10);
 
             model.addAttribute("welcomeMessage", "Cześć, to będzie Twój nick: " + newNickname.getName());
             return "index";
@@ -72,6 +94,7 @@ public class HomeController {
         }
 
     }
+
 
     @GetMapping(path = "/{gameTableName}")
     public String getGameTable(@PathVariable(name = "gameTableName") String gameTableName,
@@ -105,7 +128,7 @@ public class HomeController {
 //        return "index";
 //    }
 
-    @GetMapping(path = "/", produces = "text/html; charset=UTF-8")
+    @GetMapping(path = "/zero", produces = "text/html; charset=UTF-8")
     public void setPlayersAtAllTablesToZero() {
 
         List<GameTable> gameTables = gameTableService.findAllGameTables();

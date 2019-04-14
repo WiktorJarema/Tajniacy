@@ -1,10 +1,8 @@
-/*
 package org.tajniacy.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.ImportResource;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -35,7 +33,7 @@ import java.util.Properties;
 @ComponentScan(basePackages = "org.tajniacy")
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages = "org.tajniacy")
-public class AppConfig implements WebMvcConfigurer {
+public class AppConfig2 implements WebMvcConfigurer {
 
     @Bean
     public ViewResolver viewResolver() {
@@ -126,4 +124,5 @@ public class AppConfig implements WebMvcConfigurer {
 //    }
 
 }
-*/
+
+

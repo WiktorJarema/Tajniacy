@@ -32,7 +32,6 @@ public class NicknameServiceImpl implements NicknameService {
 
     @Override
     public void setNicknameIsFree(Long id, boolean value) throws NicknameNotFoundException {
-        System.out.println("Service, setNicknameIsFree");
         nicknameRepository.setNicknameIsFree(id, value);
     }
 
@@ -50,4 +49,11 @@ public class NicknameServiceImpl implements NicknameService {
     public Nickname getNicknameById(Long id) throws NicknameNotFoundException {
         return nicknameRepository.findNicknameById(id);
     }
+
+    @Override
+    public void test() {
+        System.out.println("Udało się");
+    }
+
+
 }

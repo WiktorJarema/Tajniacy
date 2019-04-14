@@ -169,6 +169,30 @@ $(document).ready(function () {
 
 
 
+    // cykliczne wykonywanie zapytań
+    var interval = setInterval(function () {
+        resetSessionTimeout();
+    }, 5000);
+
+
+    // reset MaxInactiveInterval sesji
+    function resetSessionTimeout() {
+        $.ajax({
+            url: "http://localhost:8080/resetsessiontimeout",
+            data: {},
+            type: "PATCH",
+            dataType: "text"
+        })
+            .done(function(result) {
+
+                console.log("Ok reset MaxInactiveInterval");
+
+            })
+            .fail(function(xhr,status,err) {
+                console.log("Błąd resetu MaxInactiveInterval");
+            })
+    }
+
 
 
 

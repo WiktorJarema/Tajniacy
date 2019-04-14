@@ -15,4 +15,7 @@ public interface NicknameService {
     List<Nickname> getAllUsedNicknames();
 
     Nickname getNicknameById(Long id) throws NicknameNotFoundException;
+
+    // do usunięcia
+    void test();
 }

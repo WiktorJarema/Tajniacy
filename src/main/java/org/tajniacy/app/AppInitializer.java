@@ -1,7 +1,12 @@
+/*
 package org.tajniacy.app;
 
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 import org.tajniacy.config.AppConfig;
+import org.tajniacy.listener.NicknameSessionListener;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 
 
 public class AppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
@@ -28,4 +33,13 @@ public class AppInitializer extends AbstractAnnotationConfigDispatcherServletIni
 //        return new Filter[] { new HiddenHttpMethodFilter() };
 //    }
 
+
+    // skopiowane z neta, ma pomóc w rozwiązaniu problemu z SessionListenerem
+//    @Override
+//    public void onStartup(ServletContext servletContext) throws ServletException {
+//        super.onStartup(servletContext);
+//        servletContext.addListener(new NicknameSessionListener());
+//    }
+
 }
+*/

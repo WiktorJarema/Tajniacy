@@ -121,12 +121,7 @@ public class GameTableRestController {
 //        return "Wskazówka przyjęta";
     }
 
-    // kopia z zadań z modułu 5
-//    @ResponseBody
-//    @PostMapping(path = "/form", produces = "text/html; charset=UTF-8")
-//    public String showParam(@RequestParam(name = "paramName") String param) {
-//        return "Wartość parametru: " + param;
-//    }
+
 
     @GetMapping(path = "/tables/{gameTableName}/gamewords")
     public List<GameWord> getGameWords(@PathVariable(name = "gameTableName") String gameTableName,

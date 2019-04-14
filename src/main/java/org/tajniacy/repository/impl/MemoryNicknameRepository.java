@@ -15,28 +15,25 @@ public class MemoryNicknameRepository implements NicknameRepository {
 
     public MemoryNicknameRepository() {
         nicknames = new ArrayList<>();
-        nicknames.add(new Nickname(1L, "Dark Knight"));
-        nicknames.add(new Nickname(2L, "Nikita"));
-        nicknames.add(new Nickname(3L, "Mr. Robot"));
-        nicknames.add(new Nickname(4L, "James Bond"));
-        nicknames.add(new Nickname(5L, "Darlene"));
-        nicknames.add(new Nickname(6L, "Jason Bourne"));
-        nicknames.add(new Nickname(7L, "Ronin"));
-        nicknames.add(new Nickname(8L, "Kukliński"));
-        nicknames.add(new Nickname(9L, "Carmen"));
+        nicknames.add(new Nickname(1L, "1_Jason Bourne"));
+        nicknames.add(new Nickname(2L, "2_Nikita"));
+        nicknames.add(new Nickname(3L, "3_Mr. Robot"));
+        nicknames.add(new Nickname(4L, "4_James Bond"));
+        nicknames.add(new Nickname(5L, "5_Darlene"));
+        nicknames.add(new Nickname(6L, "6_Dark Knight"));
+        nicknames.add(new Nickname(7L, "7_Ronin"));
+        nicknames.add(new Nickname(8L, "8_Kukliński"));
+        nicknames.add(new Nickname(9L, "9_Carmen"));
     }
 
     @Override
     public Nickname findNicknameById(Long id) throws NicknameNotFoundException {
         for (int i = 0; i < nicknames.size() - 1; i++) {
-//            System.out.println("id" + id);
-//            System.out.println(nicknames.get(i).getId());
-//            System.out.println(nicknames.get(i).getName());
+
             if (nicknames.get(i).getId().compareTo(id) ==  0) {
-//                System.out.println("to jest " + nicknames.get(i).getName());
                 return nicknames.get(i);
             }
-//            System.out.println();
+
         }
         throw new NicknameNotFoundException();
     }
@@ -49,7 +46,6 @@ public class MemoryNicknameRepository implements NicknameRepository {
     @Override
     public void setNicknameIsFree(Long id, boolean value) throws NicknameNotFoundException{
         findNicknameById(id).setIsFree(value);
-        System.out.println("repository, setNicknameIsFree used");
     }
 
     @Override

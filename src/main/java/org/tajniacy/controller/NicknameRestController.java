@@ -1,15 +1,17 @@
 package org.tajniacy.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Component;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import org.tajniacy.exception.NicknameNotFoundException;
+import org.tajniacy.listener.NicknameSessionListener;
 import org.tajniacy.model.Nickname;
 import org.tajniacy.service.NicknameService;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
+
 
 @RestController
 public class NicknameRestController {
@@ -46,6 +48,19 @@ public class NicknameRestController {
 
     }
 
+    @PatchMapping(path = "/resetsessiontimeout")
+    public String resetSessionTimeout(HttpSession session) {
 
+        Object nicknameObject = session.getAttribute("nickname");
+        if (nicknameObject != null) {
+            session.setMaxInactiveInterval(10);
+            Nickname usedNickname = (Nickname) nicknameObject;
+            System.out.println("Reset MaxInactiveInterval dla: " + usedNickname.getName());
+            return "Reset MaxInactiveInterval ok";
+        }
+        System.out.println("Nie udało się zresetować Reset MaxInactiveInterval");
+
+        return "Błąd resetu MaxInactiveInterval";
+    }
 
 }
