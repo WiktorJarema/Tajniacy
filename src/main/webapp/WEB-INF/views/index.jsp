@@ -24,9 +24,27 @@
 <body>
 
 <div id="container">
-    <div><h3>${welcomeMessage}</h3></div>
-    <div id="list_container"></div>
-    <div id="footer"></div>
+    <div class="online-users">
+        <span>Aktualna liczba użytkowników online:&nbsp</span>
+        <span id="number-online-users">0</span>
+    </div>
+    <div class="width_container">
+        <div id="index_header">
+            <div class="welcome">${welcomeMessage1}</div>
+            <div class="welcome">${welcomeMessage2}</div>
+            <div class="welcome">${welcomeMessage3}<strong>&nbsp;${nickname_name}</strong></div>
+        </div>
+        <h4>Lista stołów:</h4>
+        <div id="list_container"></div>
+        <div id="footer">
+            <div class="info">
+                <div class="welcome">${infoMessage1}</div>
+                <div class="welcome">${infoMessage2}</div>
+            </div>
+            <div class="cookies">${cookiesMessage}</div>
+        </div>
+    </div>
+
 </div>
 
 </body>

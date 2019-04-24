@@ -85,9 +85,12 @@ public class AppConfig2 implements WebMvcConfigurer {
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/tajniacy?useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8");
-        dataSource.setUsername("root");
-        dataSource.setPassword("coderslab");
+//        dataSource.setUrl("jdbc:mysql://localhost:3306/tajniacy?useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8");
+//        dataSource.setUsername("root");
+//        dataSource.setPassword("coderslab");
+        dataSource.setUrl("jdbc:mysql://tajniacy.chh7vnexz1vl.eu-central-1.rds.amazonaws.com/tajniacy?useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8");
+        dataSource.setUsername("administrator");
+        dataSource.setPassword("wAkacje32");
         return dataSource;
     }
     // koniec konfiguracji Hibernate
@@ -103,25 +106,16 @@ public class AppConfig2 implements WebMvcConfigurer {
     // CORS
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**");
-//                .allowedMethods("GET", "POST", "PUT", "DELETE")
-//                .allowedOrigins("http://localhost");
+        registry.addMapping("/**")
+                .allowedOrigins("*")
+                .allowedHeaders()
+                .allowCredentials(false);
     }
 
 
 
 
-    // tu moje testy z configuracją Listenera
 
-//    @Bean
-//    public HttpSessionListener getHttpSessionListener() {
-//        return new NicknameSessionListener();
-//    }
-
-//    @Bean
-//    public ServletListenerRegistrationBean<HttpSessionListener> sessionListener() {
-//        return new ServletListenerRegistrationBean<HttpSessionListener>(new NicknameSessionListener());
-//    }
 
 }
 

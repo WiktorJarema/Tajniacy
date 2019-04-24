@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @Transactional
 public class GameTableRestController {
@@ -126,7 +127,6 @@ public class GameTableRestController {
     @GetMapping(path = "/tables/{gameTableName}/gamewords")
     public List<GameWord> getGameWords(@PathVariable(name = "gameTableName") String gameTableName,
                                        HttpSession session) {
-
 
         Object nicknameObject = session.getAttribute("nickname");
         if (nicknameObject == null) {

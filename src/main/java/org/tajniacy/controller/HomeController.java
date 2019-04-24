@@ -3,6 +3,7 @@ package org.tajniacy.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -23,6 +24,7 @@ import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.util.List;
 
+@CrossOrigin
 @Controller
 @Transactional
 public class HomeController {
@@ -37,23 +39,18 @@ public class HomeController {
     GameService gameService;
 
 
+
     @ResponseBody
     @GetMapping(path = "/test", produces = "text/html; charset=UTF-8")
-    public String tests() {
+    public String test(HttpSession session) {
 
-        List<Nickname> list = nicknameService.getAllNicknames();
-
-
-        for (Nickname element : list) {
-            System.out.println(element.getName());
+        Object nicknameObject = session.getAttribute("nickname");
+        if (nicknameObject == null) {
+            return "nicknameObject jest null";
+        } else {
+            Nickname usedNickname = (Nickname) nicknameObject;
+            return "Twój nickname to: " + usedNickname.getName();
         }
-
-        System.out.println();
-        System.out.println();
-
-        System.out.println(list.get(10).getName());
-
-        return "Koniec metody tests";
     }
 
 
@@ -76,7 +73,7 @@ public class HomeController {
     }
 
 
-    @GetMapping(path = "/home", produces = "text/html; charset=UTF-8")
+    @GetMapping(path = "/", produces = "text/html; charset=UTF-8")
     public String homePage(HttpSession session, Model model) throws NicknameNotFoundException {
 
         Object nicknameObject = session.getAttribute("nickname");
@@ -85,11 +82,18 @@ public class HomeController {
             session.setAttribute("nickname", newNickname);
             session.setMaxInactiveInterval(10);
 
-            model.addAttribute("welcomeMessage", "Cześć, to będzie Twój nick: " + newNickname.getName());
+//            model.addAttribute("welcomeMessage", "Cześć, to będzie Twój nick: " + newNickname.getName());
+            model.addAttribute("welcomeMessage1", "Witaj na stronie poświęconej popularnej grze \"Tajniacy\".");
+            model.addAttribute("welcomeMessage2", "Aby zagrać wybierz jeden z dostępnych stołów.");
+            model.addAttribute("welcomeMessage3", "Na potrzeby gry został Ci przydzielony pseudonim:");
+            model.addAttribute("nickname_name", newNickname.getName());
+            model.addAttribute("infoMessage1", "Strona funkcjonuje od niedawna i podlega ciągłemu rozwojowi.");
+            model.addAttribute("infoMessage2", "Projekt w fazie proof of concept, także wybacz, jeżeli coś nie zadziała;)");
+            model.addAttribute("cookiesMessage", "Strona używa plików cookies (tzw. ciasteczka) w celach funkcjonalnych.");
             return "index";
         } else {
             Nickname usedNickname = (Nickname) nicknameObject;
-            model.addAttribute("welcomeMessage", "A my się już znamy, cześć " + usedNickname.getName());
+            model.addAttribute("welcomeMessage3", "Cześć " + usedNickname.getName() + ", my się już znamy.");
             return "index";
         }
 

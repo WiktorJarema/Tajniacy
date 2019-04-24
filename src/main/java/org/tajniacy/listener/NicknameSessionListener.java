@@ -10,14 +10,18 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.tajniacy.exception.NicknameNotFoundException;
+import org.tajniacy.model.GameTable;
 import org.tajniacy.model.Nickname;
+import org.tajniacy.service.GameTableService;
 import org.tajniacy.service.NicknameService;
+import org.tajniacy.service.impl.GameTableServiceImpl;
 import org.tajniacy.service.impl.NicknameServiceImpl;
 
 import javax.servlet.ServletContext;
@@ -76,6 +80,7 @@ import java.util.concurrent.atomic.AtomicInteger;
     https://stackoverflow.com/questions/38795287/webapplicationcontextutils-getwebapplicationcontextservletcontext-returns-null
 */
 
+@CrossOrigin
 //@WebListener
 //@Order(Ordered.LOWEST_PRECEDENCE)
 public class NicknameSessionListener implements HttpSessionListener {
@@ -84,8 +89,11 @@ public class NicknameSessionListener implements HttpSessionListener {
 //    NicknameService nicknameService;
 
 
-    private AtomicInteger activeSessions = new AtomicInteger();
+    private static AtomicInteger activeSessions = new AtomicInteger();
 
+    public static AtomicInteger getActiveSessions() {
+        return activeSessions;
+    }
 
     @Override
     public void sessionCreated(HttpSessionEvent httpSessionEvent) {
@@ -113,10 +121,21 @@ public class NicknameSessionListener implements HttpSessionListener {
 
         ApplicationContext rootContext = WebApplicationContextUtils.getWebApplicationContext(httpSessionEvent.getSession().getServletContext());
         NicknameService nicknameService = rootContext.getBean(NicknameServiceImpl.class);
+        GameTableService gameTableService = rootContext.getBean(GameTableServiceImpl.class);
 
+        // usunięcie gracza ze wszystkich stołów, trochę siłowo, do zmiany w przyszłości
+        Long playerId = nickname.getId();
+        List<GameTable> gameTables = gameTableService.findAllGameTables();
+        for (GameTable gameTable : gameTables) {
+            gameTableService.deletePlayerFromGameTable(gameTable.getName(), 1l, playerId);
+            gameTableService.deletePlayerFromGameTable(gameTable.getName(), 2l, playerId);
+            gameTableService.deletePlayerFromGameTable(gameTable.getName(), 3l, playerId);
+            gameTableService.deletePlayerFromGameTable(gameTable.getName(), 4l, playerId);
+        }
+
+        // zwolnienie nickname
         try {
             nicknameService.setNicknameIsFree(nickname.getId(), true);
-//            System.out.println("Nickname: " + nickname.getName() + " jest z powrotem wolny");
         } catch (NicknameNotFoundException e) {
             e.printStackTrace();
         }
@@ -126,92 +145,4 @@ public class NicknameSessionListener implements HttpSessionListener {
         System.out.println();
     }
 
-
-
-
-
-
-
-
 }
-
-
-
-//    public ApplicationContext context = null;
-
-//    public NicknameSessionListener() {
-//        super();
-//    }
-
-//    public void contextInitialized(ServletContextEvent sce) {
-//        WebApplicationContextUtils
-//                .getRequiredWebApplicationContext(sce.getServletContext())
-//                .getAutowireCapableBeanFactory()
-//                .autowireBean(this);
-//    }
-
-
-//    public void contextInitialized(ServletContextEvent sce) {
-//        ServletContext servletContext = sce.getServletContext();
-//        servletContext.setAttribute("userCounter", new AtomicInteger());
-//    }
-
-
-//    @Override
-//    public void contextInitialized(ServletContextEvent sce) {
-//        WebApplicationContextUtils
-//                .getRequiredWebApplicationContext(sce.getServletContext())
-//                .getAutowireCapableBeanFactory()
-//                .autowireBean(this);
-//    }
-//
-//    @Override
-//    public void contextDestroyed(ServletContextEvent servletContextEvent) {
-//
-//    }
-
-
-
-//    @Override
-//    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-//        if (applicationContext instanceof WebApplicationContext) {
-//            ((WebApplicationContext) applicationContext).getServletContext().addListener(this);
-//        } else {
-//            //Either throw an exception or fail gracefully, up to you
-//            throw new RuntimeException("Must be inside a web application context");
-//        }
-////        System.out.println("setting context");
-////        this.context = applicationContext;
-//    }
-
-
-//    @Override
-//    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-//        if (applicationContext instanceof WebApplicationContext) {
-//            ((WebApplicationContext) applicationContext).getServletContext().addListener(this);
-//        } else {
-//            //Either throw an exception or fail gracefully, up to you
-//            throw new RuntimeException("Must be inside a web application context");
-//        }
-//    }
-
-
-// dla testów - też się nie wykonuje
-//        List<Nickname> list = nicknameService.getAllNicknames();
-//        System.out.println(list.get(3).getName());
-
-// ten kod się nie wykonuje
-//        try {
-//            nicknameService.setNicknameIsFree(nicknameToBeFree.getId(), true);
-//        } catch (NicknameNotFoundException exception) {
-//            exception.printStackTrace();
-//        }
-
-
-//        contextInitialized(httpSessionEvent);
-
-//        WebApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(httpSessionEvent.getSession().getServletContext());
-//        NicknameServiceImpl nicknameService = context.getBean(NicknameServiceImpl.class);
-
-
-

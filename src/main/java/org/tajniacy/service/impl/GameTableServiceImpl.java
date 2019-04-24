@@ -116,7 +116,8 @@ public class GameTableServiceImpl implements GameTableService  {
         } else if (seatId == 4 && gameTable.getPlayerBlueSecondId() == playerId) {
             gameTable.setPlayerBlueSecondId(0l);
         } else {
-            System.out.println("coś nie tak");
+            System.out.println("usuwanie gracza ze wszystkich stołów");/*komentarz "coś nie tak", bo początkowo planowałem używać metody tylko do samedzielnego odchodzena gracza od stołu,
+            teraz korzystam z tej metody również do usuwania gracza w SessionListenerze przy zamknięciu przeglądarki*/
         }
         gameTableJpaRepository.save(gameTable);
     }

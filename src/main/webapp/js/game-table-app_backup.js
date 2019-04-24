@@ -1,9 +1,5 @@
 $(document).ready(function () {
 
-    // var host = "tajniacy.eu-central-1.elasticbeanstalk.com";
-    var host = "www.tajniacy.org";
-    // var host = "localhost:8080";
-    
     // metody wykonywane na starcie
     getCurrentNickname();
     getGameWords();
@@ -38,7 +34,7 @@ $(document).ready(function () {
         event.preventDefault();
 
         $.ajax({
-            url: "http://" + host + "/tables" + window.location.pathname,
+            url: "http://tajniacy.eu-central-1.elasticbeanstalk.com/tables" + window.location.pathname,
             type: $(this).attr('method'),
             data: $(this).serialize(),
             dataType: "text",
@@ -63,35 +59,35 @@ $(document).ready(function () {
 
         // if (jakiś warunek dodać) {
 
-            $.ajax({
-                url: "http://" + host + "/tables" + window.location.pathname + "/checkgameword/" + gameWordId,
-                // headers: {'Content-Type': 'application/json'},
-                data: {},
-                type: "GET",
-                dataType: "json"
+        $.ajax({
+            url: "http://tajniacy.eu-central-1.elasticbeanstalk.com/tables" + window.location.pathname + "/checkgameword/" + gameWordId,
+            // headers: {'Content-Type': 'application/json'},
+            data: {},
+            type: "GET",
+            dataType: "json"
+        })
+            .done(function (result) {
+
+                // currentButton.attr("disabled",true);
+                currentButton.children(':first-child').addClass("hidden");
+                currentButton.on("mouseover", showGameWord).on("mouseleave", hideGameWord);
+                console.log(result.teamColour);
+                switch(result.teamColour) {
+                    case "red":
+                        currentButton.addClass("hit-red");
+                        break;
+                    case "blue":
+                        currentButton.addClass("hit-blue");
+                        break;
+                    case "neutral":
+                        currentButton.addClass("hit-neutral");
+                        break;
+                }
+
             })
-                .done(function (result) {
-
-                    // currentButton.attr("disabled",true);
-                    currentButton.children(':first-child').addClass("hidden");
-                    currentButton.on("mouseover", showGameWord).on("mouseleave", hideGameWord);
-                    // console.log(result.teamColour);
-                    switch(result.teamColour) {
-                        case "red":
-                            currentButton.addClass("hit-red");
-                            break;
-                        case "blue":
-                            currentButton.addClass("hit-blue");
-                            break;
-                        case "neutral":
-                            currentButton.addClass("hit-neutral");
-                            break;
-                    }
-
-                })
-                .fail(function (xhr, status, err) {
-                    console.log("Wystąpił błąd przy dodawaniu zajmowaniu miejsca");
-                })
+            .fail(function (xhr, status, err) {
+                console.log("Wystąpił błąd przy dodawaniu zajmowaniu miejsca");
+            })
 
         // } else {
         //     alert("Coś poszło nie tak.");
@@ -110,7 +106,7 @@ $(document).ready(function () {
         var data = "seatAction=" + seatAction;//"id=id&content=miejsce";
 
         $.ajax({
-            url: "http://" + host + "/tables" + window.location.pathname + "/" + seatId,
+            url: "http://tajniacy.eu-central-1.elasticbeanstalk.com/tables" + window.location.pathname + "/" + seatId,
             // headers: {'Content-Type': 'application/json'},
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
             data: data,
@@ -155,7 +151,7 @@ $(document).ready(function () {
     function newGameWords() {
 
         $.ajax({
-            url: "http://" + host + "/tables" + window.location.pathname + "/newgamewords",
+            url: "http://tajniacy.eu-central-1.elasticbeanstalk.com/tables" + window.location.pathname + "/newgamewords",
             // headers: {'Content-Type': 'application/json'},
             data: {},
             type: "PATCH",
@@ -188,7 +184,7 @@ $(document).ready(function () {
     function turnChange() {
 
         $.ajax({
-            url: "http://" + host + "/tables" + window.location.pathname,
+            url: "http://tajniacy.eu-central-1.elasticbeanstalk.com/tables" + window.location.pathname,
             // headers: {'Content-Type': 'application/json'},
             data: {},
             type: "PATCH",
@@ -209,7 +205,7 @@ $(document).ready(function () {
     function changeWhoseTurn() {
 
         $.ajax({
-            url: "http://" + host + "/tables" + window.location.pathname + "/checkwhoseturn",
+            url: "http://tajniacy.eu-central-1.elasticbeanstalk.com/tables" + window.location.pathname + "/checkwhoseturn",
             // headers: {'Content-Type': 'application/json'},
             data: {},
             type: "GET",
@@ -217,7 +213,7 @@ $(document).ready(function () {
         })
             .done(function (result) {
 
-                // console.log("wynik ze zmiany tury: " + result);
+                console.log("wynik ze zmiany tury: " + result);
 
                 if (result == "redTeamSeat1") {
                     $("#redTeamSeat2").removeClass("players-turn");
@@ -255,7 +251,7 @@ $(document).ready(function () {
     function getPlayersNames() {
 
         $.ajax({
-            url: "http://" + host + "/tables" + window.location.pathname,
+            url: "http://tajniacy.eu-central-1.elasticbeanstalk.com/tables" + window.location.pathname,
             // headers: {'Content-Type': 'application/json'},
             data: {},
             type: "GET",
@@ -280,7 +276,7 @@ $(document).ready(function () {
 
                 if (redTeamSeat1PlayerId != 0) {
                     $.ajax({
-                        url: "http://" + host + "/nicknames/" + redTeamSeat1PlayerId,
+                        url: "http://tajniacy.eu-central-1.elasticbeanstalk.com/nicknames/" + redTeamSeat1PlayerId,
                         data: {},
                         type: "GET",
                         dataType: "json",
@@ -300,7 +296,7 @@ $(document).ready(function () {
 
                 if (redTeamSeat2PlayerId != 0) {
                     $.ajax({
-                        url: "http://" + host + "/nicknames/" + redTeamSeat2PlayerId,
+                        url: "http://tajniacy.eu-central-1.elasticbeanstalk.com/nicknames/" + redTeamSeat2PlayerId,
                         data: {},
                         type: "GET",
                         dataType: "json",
@@ -319,7 +315,7 @@ $(document).ready(function () {
 
                 if (blueTeamSeat1PlayerId != 0) {
                     $.ajax({
-                        url: "http://" + host + "/nicknames/" + blueTeamSeat1PlayerId,
+                        url: "http://tajniacy.eu-central-1.elasticbeanstalk.com/nicknames/" + blueTeamSeat1PlayerId,
                         data: {},
                         type: "GET",
                         dataType: "json",
@@ -338,7 +334,7 @@ $(document).ready(function () {
 
                 if (blueTeamSeat2PlayerId != 0) {
                     $.ajax({
-                        url: "http://" + host + "/nicknames/" + blueTeamSeat2PlayerId,
+                        url: "http://tajniacy.eu-central-1.elasticbeanstalk.com/nicknames/" + blueTeamSeat2PlayerId,
                         data: {},
                         type: "GET",
                         dataType: "json",
@@ -359,7 +355,7 @@ $(document).ready(function () {
                 // sprawdzanie "mojego id" i na tej podstawie ustawianie przycisku wyłącz i bolda
 
                 $.ajax({
-                    url: "http://" + host + "/currentnickname",
+                    url: "http://tajniacy.eu-central-1.elasticbeanstalk.com/currentnickname",
                     data: {},
                     type: "GET",
                     dataType: "json",
@@ -410,8 +406,8 @@ $(document).ready(function () {
     // odbieranie słów
     function getGameWords() {
         $.ajax({
-            url: "http://" + host + "/tables" + window.location.pathname + "/gamewords",
-            // url: "http://" + host + "/tables",
+            url: "http://tajniacy.eu-central-1.elasticbeanstalk.com/tables" + window.location.pathname + "/gamewords",
+            // url: "http://tajniacy.eu-central-1.elasticbeanstalk.com/tables",
             //data: {},
             type: "GET",
             dataType: "json"
@@ -512,7 +508,7 @@ $(document).ready(function () {
     // odbieranie gry, wykorzystanie informacji o wskazówce i czyja jest kolej
     function getGameAndUpdateClueAndWhoseTurn() {
         $.ajax({
-            url: "http://" + host + "/tables" + window.location.pathname + "/game",
+            url: "http://tajniacy.eu-central-1.elasticbeanstalk.com/tables" + window.location.pathname + "/game",
             //data: {},
             type: "GET",
             dataType: "json"
@@ -526,7 +522,7 @@ $(document).ready(function () {
                 console.log("teraz tura: " + whoseTurn);
 
                 if (whoseTurn == "redTeamSeat1") {
-                    // console.log("tura redTeamSeat1, wyczyszenie zielonego pola");
+                    console.log("tura redTeamSeat1, wyczyszenie zielonego pola");
                     $("#redTeamSeat2").removeClass("players-turn");
                     $("#blueTeamSeat1").removeClass("players-turn");
                     $("#blueTeamSeat2").removeClass("players-turn");
@@ -547,7 +543,7 @@ $(document).ready(function () {
                     $("#blueTeamSeat1").removeClass("players-turn");
                     $("#blueTeamSeat2").addClass("players-turn");
                 } else {
-                    // console.log("tura redTeamSeat1, zadziałał else, nie wchodzi w czyszczenie pola");
+                    console.log("tura redTeamSeat1, zadziałał else, nie wchodzi w czyszczenie pola");
                 }
 
             })
@@ -561,7 +557,7 @@ $(document).ready(function () {
     // pytanie o mój nickname
     function getCurrentNickname() {
         $.ajax({
-            url: "http://" + host + "/currentnickname",
+            url: "http://tajniacy.eu-central-1.elasticbeanstalk.com/currentnickname",
             //data: {},
             type: "GET",
             dataType: "json"
@@ -569,10 +565,10 @@ $(document).ready(function () {
             .done(function(result) {
 
                 var nicknameName = result.name;
-                $("#nickname").text("Twój pseudonim: " + nicknameName);
-                // console.log("chyba działa");
+                $("#nickname").text("Twój nick: " + nicknameName);
+                console.log("chyba działa");
 
-                // console.log(nicknameName);
+                console.log(nicknameName);
 
             })
             .fail(function(xhr,status,err) {
@@ -585,14 +581,14 @@ $(document).ready(function () {
     // reset MaxInactiveInterval sesji
     function resetSessionTimeout() {
         $.ajax({
-            url: "http://" + host + "/resetsessiontimeout",
+            url: "http://tajniacy.eu-central-1.elasticbeanstalk.com/resetsessiontimeout",
             data: {},
             type: "PATCH",
             dataType: "text"
         })
             .done(function(result) {
 
-                // console.log("Ok reset MaxInactiveInterval");
+                console.log("Ok reset MaxInactiveInterval");
 
             })
             .fail(function(xhr,status,err) {

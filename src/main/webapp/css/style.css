@@ -34,6 +34,18 @@ body {
     font-family: Roboto,arial,sans-serif;
 }
 
+a {
+    text-decoration: none;
+    color: black;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+h4 {
+    margin: 0;
+}
 
 #container {
     /*text-align: center;*/
@@ -63,14 +75,47 @@ body {
     margin: 0 auto;
 }
 
-.game-table_header {
-    margin: 0 0 20px 0;
+.width_container {
+    width: 600px;
+    margin: 0 auto;
+}
+
+.welcome {
+    margin: 4px 0 4px 0;
+}
+
+.info {
+    margin: 30px 0 0 0;
+    /*font-size: 14px;*/
+}
+
+.cookies {
+    margin: 40px 0 0 0;
+    /*font-size: 14px;*/
+}
+
+#game-table_header {
+    margin: 0 0 15px 0;
     width: 100%;
     display: flex;
     /*background-color: #c1c1c1;*/
     background-color: #dddddd;
     /*border: thin solid #d5d5d5;*/
     /*border-top: 0;*/
+}
+
+#index_header {
+    margin: 0 0 15px 0;
+    width: 100%;
+    /*display: flex;*/
+    /*background-color: #c1c1c1;*/
+    background-color: #dddddd;
+    /*border: thin solid #d5d5d5;*/
+    /*border-top: 0;*/
+}
+
+.online-users {
+    font-size: 12px;
 }
 
 .game-table_players {
@@ -358,14 +403,15 @@ div.icon-blue {
     width: 30px;
     height: 30px;
     margin: 0 10px 0 0;
-    background-color: #0074d9;
+    /*background-color: #0074d9;*/
+    /*background-color: white;*/
 }
 
 div.icon-red {
     width: 30px;
     height: 30px;
     margin: 0 10px 0 0;
-    background-color: darkred;
+    /*background-color: darkred;*/
 }
 
 .gamewords-row {
@@ -385,8 +431,20 @@ div.icon-red {
     margin: 0 auto;
 }
 
+.img-icon-blue {
+    -webkit-filter: invert(25%) sepia(92%) saturate(3404%) hue-rotate(195deg) brightness(98%) contrast(101%);
+    filter: invert(25%) sepia(92%) saturate(3404%) hue-rotate(195deg) brightness(98%) contrast(101%);
+    /*filter: opacity(.5) drop-shadow(0 0 0 green);*/
+}
+
+.img-icon-red {
+    -webkit-filter: invert(10%) sepia(53%) saturate(7143%) hue-rotate(7deg) brightness(87%) contrast(119%);
+    filter: invert(10%) sepia(53%) saturate(7143%) hue-rotate(7deg) brightness(87%) contrast(119%);
+    /*filter: drop-shadow(0 0 0 #8b0000);*/
+}
+
 .game-table-div {
-    margin: 30px 0 0 0;
+    margin: 10px 0 20px 0;
     width: 100%;
     display: flex;
     background-color: #e4e4e4;
@@ -489,15 +547,4 @@ input.form-control {
 label {
     padding-bottom: 5px;
     margin: 0px;
-}
-
-.add-book-header {
-    padding: 15px;
-    margin: 0px;
-}
-
-h1.add-book-header {
-    padding: 0px;
-    margin: 0px;
-    font-size: 20px;
 }

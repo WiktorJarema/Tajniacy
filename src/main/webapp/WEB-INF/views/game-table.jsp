@@ -26,11 +26,13 @@
 <body>
 
 <div id="container">
+    <a href="/">Strona główna</a>
     <div id="game-table_container">
 
         <%--nagłówek--%>
-        <div class="game-table_header">
+        <div id="game-table_header">
             <div style="width: 860px">
+
                 <div>Nazwa stołu: ${gameTable}</div>
                 <div id="nickname"></div>
             </div>
@@ -40,7 +42,7 @@
         <%--gracze--%>
         <div class="game-table_players">
             <div class="player_container">
-                <div id="redTeamSeat1Icon" class="icon-red"></div>
+                <div id="redTeamSeat1Icon" class="icon-red"><img src="../../img/spymaster_icon3.png" class="img-icon-red"></div>
                 <button id="redTeamSeat1TakeASeat" data-seat-id="1" data-seat-action="take" class="seat-red">wolne miejsce</button>
                 <div <%--id="partnerSeat"--%> id="redTeamSeat1" class="player-name hidden">test</div>
                 <button id="redTeamSeat1LeaveASeat" data-seat-id="1" data-seat-action="leave" class="seat-leave hidden"><i class="fa fa-close"></i></button>
@@ -56,7 +58,7 @@
             </div>
             <div class="player_container">
                 <%--<span class="dot blue-dot"></span>--%>
-                <div id="blueTeamSeat1Icon" class="icon-blue"></div>
+                <div id="blueTeamSeat1Icon" class="icon-blue"><img src="../../img/spymaster_icon3.png" class="img-icon-blue"></div>
                 <button id="blueTeamSeat1TakeASeat" data-seat-id="3" data-seat-action="take" class="seat-blue">wolne miejsce</button>
                 <div <%--id="opponentOtherRoleSeat"--%> id="blueTeamSeat1" class="player-name hidden">test</div>
                 <button id="blueTeamSeat1LeaveASeat" data-seat-id="3" data-seat-action="leave" class="seat-leave hidden"><i class="fa fa-close"></i></button>
@@ -109,7 +111,7 @@
         <div class="game-table_players">
             <div class="player_container">
                 <%--<span class="dot red-dot"></span>--%>
-                <div id="redTeamSeat2Icon" class="icon-red"></div>
+                <div id="redTeamSeat2Icon" class="icon-red"><img src="../../img/spy-icon.png" class="img-icon-red"></div>
                 <button id="redTeamSeat2TakeASeat" data-seat-id="2" data-seat-action="take" class="seat-red">wolne miejsce</button>
                 <div <%--id="playerSeat"--%> id="redTeamSeat2" class="player-name hidden">test</div>
                 <button id="redTeamSeat2LeaveASeat" data-seat-id="2" data-seat-action="leave" class="seat-leave hidden"><i class="fa fa-close"></i></button>
@@ -132,7 +134,7 @@
             </div>
             <div class="player_container">
                 <%--<span class="dot blue-dot"></span>--%>
-                <div id="blueTeamSeat2Icon" class="icon-blue"></div>
+                <div id="blueTeamSeat2Icon" class="icon-blue"><img src="../../img/spy-icon.png" class="img-icon-blue"></div>
                 <button id="blueTeamSeat2TakeASeat" data-seat-id="4" data-seat-action="take" class="seat-blue">wolne miejsce</button>
                 <div <%--id="opponentSameRoleSeat"--%> id="blueTeamSeat2" class="player-name hidden">test</div>
                 <button id="blueTeamSeat2LeaveASeat" data-seat-id="4" data-seat-action="leave" class="seat-leave hidden"><i class="fa fa-close"></i></button>
